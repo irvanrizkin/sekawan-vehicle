@@ -35,13 +35,15 @@ export default function EditReservation({
 
     const handleAccept = () => {
         router.patch(route('reservations.update', reservation.id), {
-            approval_status: 2
+            approval_status: 2,
+            ...values
         });
     }
 
     const handleReject = () => {
         router.patch(route('reservations.update', reservation.id), {
-            approval_status: 3
+            approval_status: 3,
+            ...values
         });
     }
 
