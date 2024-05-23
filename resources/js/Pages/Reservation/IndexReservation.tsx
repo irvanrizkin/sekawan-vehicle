@@ -1,11 +1,10 @@
+import PrimaryButton from '@/Components/PrimaryButton';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import statusString from '@/helpers/statusString';
 import { IndexReservationProps } from '@/types';
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 
-export default function IndexReservation({ auth, reservations }: IndexReservationProps) {
-    console.log(reservations);
-
+export default function IndexReservation({ auth, reservations, can }: IndexReservationProps) {
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -17,7 +16,15 @@ export default function IndexReservation({ auth, reservations }: IndexReservatio
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
-                            <table className="table-auto w-full">
+                        {can.excel && (
+                            <a
+                                href={route('reservations.export')}
+                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                            >
+                                Export to Excel
+                            </a>
+                        )}
+                            <table className="table-auto w-full mt-3">
                                 <thead>
                                     <tr>
                                         <th className="px-4 py-2">ID</th>

@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ReservationsExport;
 use App\Models\Reservation;
 use App\Models\User;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReservationController extends Controller
 {
@@ -20,7 +22,7 @@ class ReservationController extends Controller
         ]);
     }
 
-    public function index()
+    public function index(Request $request)
     {
         if (Gate::allows('approve-reservation')) {
             $reservations = Reservation::with('approver')->where('approver_id', auth()->id())->get();
@@ -32,6 +34,9 @@ class ReservationController extends Controller
 
         return Inertia::render('Reservation/IndexReservation', [
             'reservations' => $reservations,
+            'can' => [
+                'excel' => $request->user()->can('export-excel'),
+            ],
         ]);
     }
 
@@ -96,5 +101,14 @@ class ReservationController extends Controller
         ]);
 
         return redirect()->route('reservations.index');
+    }
+
+    public function exportExcel(Request $request)
+    {
+        if (!$request->user()->can('export-excel')) {
+            abort(403);
+        }
+
+        return Excel::download(new ReservationsExport, 'reservations.xlsx');
     }
 }

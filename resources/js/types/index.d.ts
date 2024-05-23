@@ -40,7 +40,10 @@ export type IndexVehicleProps = PageProps & {
 };
 
 export type IndexReservationProps = PageProps & {
-    reservations: Reservation[]
+    reservations: Reservation[];
+    can: {
+        excel: boolean;
+    }
 }
 
 export type EditReservationProps = PageProps & {
