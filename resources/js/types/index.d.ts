@@ -14,6 +14,11 @@ export interface Vehicle {
     updated_at: string;
 }
 
+export interface VehicleCount {
+    name: string;
+    reservations_count: number;
+}
+
 export interface Reservation {
     id: number;
     purpose: string;
@@ -54,4 +59,8 @@ export type EditReservationProps = PageProps & {
         approve: boolean;
         assign: boolean;
     };
+}
+
+export type DashboardProps = PageProps & {
+    vehiclesCount: VehicleCount[];
 }
