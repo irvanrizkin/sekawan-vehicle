@@ -4,7 +4,13 @@ import { EditReservationProps } from "@/types";
 import { Head, router } from '@inertiajs/react';
 import { useState } from "react";
 
-export default function EditReservation({ auth, reservation, drivers, approvers }: EditReservationProps) {
+export default function EditReservation({
+    auth,
+    reservation,
+    drivers,
+    approvers,
+    can,
+}: EditReservationProps) {
     const [values, setValues] = useState({
         driver_id: reservation.driver_id || '',
         approver_id: reservation.approver_id || '',
@@ -26,6 +32,18 @@ export default function EditReservation({ auth, reservation, drivers, approvers 
             ...values
         });
     };
+
+    const handleAccept = () => {
+        router.patch(route('reservations.update', reservation.id), {
+            approval_status: 2
+        });
+    }
+
+    const handleReject = () => {
+        router.patch(route('reservations.update', reservation.id), {
+            approval_status: 3
+        });
+    }
 
     return (
         <AuthenticatedLayout
@@ -64,60 +82,92 @@ export default function EditReservation({ auth, reservation, drivers, approvers 
                                 </tbody>
                             </table>
                         </div>
-                        <form onSubmit={handleSubmit}>
+                        {can.assign && (
+                            <form onSubmit={handleSubmit}>
+                                <div className="p-6 text-gray-900">
+                                    <div className="mb-4">
+                                        <label
+                                            className="block text-gray-700 text-sm font-bold mb-2"
+                                            htmlFor="driver_id"
+                                        >
+                                            Driver
+                                        </label>
+                                        <select
+                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            id="driver_id"
+                                            onChange={handleChange}
+                                            value={values.driver_id}
+                                        >
+                                            <option value="">Select Driver</option>
+                                            {drivers.map(driver => (
+                                                <option key={driver.id} value={driver.id}>
+                                                    {driver.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="mb-4">
+                                        <label
+                                            className="block text-gray-700 text-sm font-bold mb-2"
+                                            htmlFor="approver_id"
+                                        >
+                                            Approver
+                                        </label>
+                                        <select
+                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            id="approver_id"
+                                            onChange={handleChange}
+                                            value={values.approver_id}
+                                        >
+                                            <option value="">Select Approver</option>
+                                            {approvers.map(approver => (
+                                                <option key={approver.id} value={approver.id}>
+                                                    {approver.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        <button
+                                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                            type="submit"
+                                        >
+                                            Assign
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        )}
+                        {can.assign && (
                             <div className="p-6 text-gray-900">
-                                <div className="mb-4">
-                                    <label
-                                        className="block text-gray-700 text-sm font-bold mb-2"
-                                        htmlFor="driver_id"
-                                    >
-                                        Driver
-                                    </label>
-                                    <select
-                                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                        id="driver_id"
-                                        onChange={handleChange}
-                                        value={values.driver_id}
-                                    >
-                                        <option value="">Select Driver</option>
-                                        {drivers.map(driver => (
-                                            <option key={driver.id} value={driver.id}>
-                                                {driver.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="mb-4">
-                                    <label
-                                        className="block text-gray-700 text-sm font-bold mb-2"
-                                        htmlFor="approver_id"
-                                    >
-                                        Approver
-                                    </label>
-                                    <select
-                                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                        id="approver_id"
-                                        onChange={handleChange}
-                                        value={values.approver_id}
-                                    >
-                                        <option value="">Select Approver</option>
-                                        {approvers.map(approver => (
-                                            <option key={approver.id} value={approver.id}>
-                                                {approver.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
                                 <div className="flex items-center justify-between">
                                     <button
-                                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                        type="submit"
+                                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                        onClick={handleReject}
                                     >
-                                        Assign
+                                        Reject
                                     </button>
                                 </div>
                             </div>
-                        </form>
+                        )}
+                        {can.approve && (
+                            <div className="p-6 text-gray-900">
+                                <div className="flex items-center justify-between">
+                                    <button
+                                        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                        onClick={handleAccept}
+                                    >
+                                        Approve
+                                    </button>
+                                    <button
+                                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                        onClick={handleReject}
+                                    >
+                                        Reject
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

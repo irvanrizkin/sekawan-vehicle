@@ -42,4 +42,8 @@ export type EditReservationProps = PageProps & {
     reservation: Reservation;
     drivers: User[];
     approvers: User[];
+    can: {
+        approve: boolean;
+        assign: boolean;
+    };
 }

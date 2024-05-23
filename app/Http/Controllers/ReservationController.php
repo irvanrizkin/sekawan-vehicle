@@ -42,7 +42,7 @@ class ReservationController extends Controller
         return redirect()->route('dashboard');
     }
 
-    public function edit(int $id)
+    public function edit(Request $request,int $id)
     {
         $reservation = Reservation::findOrFail($id);
         $drivers = User::where('role', 'driver')->get();
@@ -62,6 +62,10 @@ class ReservationController extends Controller
             ],
             'drivers' => $drivers,
             'approvers' => $approvers,
+            'can' => [
+                'approve' => $request->user()->can('approve-reservation'),
+                'assign' => $request->user()->can('assign-reservation'),
+            ],
         ]);
     }
 
@@ -70,7 +74,7 @@ class ReservationController extends Controller
         $reservation = Reservation::findOrFail($id);
 
         $reservation->update([
-            'approval_status' => 1,
+            'approval_status' => request('approval_status'),
             'approver_id' => request('approver_id'),
             'driver_id' => request('driver_id'),
         ]);
