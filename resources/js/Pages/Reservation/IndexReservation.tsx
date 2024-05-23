@@ -2,7 +2,7 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import statusString from '@/helpers/statusString';
 import { IndexReservationProps } from '@/types';
-import { Head, router } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 
 export default function IndexReservation({ auth, reservations, can }: IndexReservationProps) {
     return (
@@ -17,12 +17,18 @@ export default function IndexReservation({ auth, reservations, can }: IndexReser
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
                         {can.excel && (
-                            <a
-                                href={route('reservations.export')}
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                            >
-                                Export to Excel
-                            </a>
+                            <Link href={route('reservations.export')}>
+                                <PrimaryButton>
+                                    Export to Excel
+                                </PrimaryButton>
+                            </Link>
+                        )}
+                        {can.create && (
+                            <Link href={route('reservations.create')}>
+                                <PrimaryButton>
+                                    Create Reservation
+                                </PrimaryButton>
+                            </Link>
                         )}
                             <table className="table-auto w-full mt-3">
                                 <thead>

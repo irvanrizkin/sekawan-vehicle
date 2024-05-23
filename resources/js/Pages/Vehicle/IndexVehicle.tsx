@@ -1,8 +1,9 @@
+import PrimaryButton from '@/Components/PrimaryButton';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { IndexVehicleProps } from '@/types';
 import { Head, Link } from '@inertiajs/react';
 
-export default function IndexVehicle({ auth, vehicles }: IndexVehicleProps) {
+export default function IndexVehicle({ auth, vehicles, can }: IndexVehicleProps) {
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -15,11 +16,13 @@ export default function IndexVehicle({ auth, vehicles }: IndexVehicleProps) {
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
                             <div className="mb-4">
-                                <Link href={route('vehicles.create')}>
-                                    <a className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                        Create Vehicle
-                                    </a>
-                                </Link>
+                                {can.create && (
+                                    <Link href={route('vehicles.create')}>
+                                        <PrimaryButton>
+                                            Create Vehicle
+                                        </PrimaryButton>
+                                    </Link>
+                                )}
                             </div>
                             <table className="table-auto w-full">
                                 <thead>

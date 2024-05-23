@@ -32,5 +32,13 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('export-excel', function (User $user) {
             return $user->role === 'admin';
         });
+
+        Gate::define('create-vehicle', function (User $user) {
+            return $user->role === 'admin';
+        });
+
+        Gate::define('create-reservation', function (User $user) {
+            return $user->role === 'employee';
+        });
     }
 }

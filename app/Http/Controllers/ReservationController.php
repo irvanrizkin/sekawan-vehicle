@@ -36,6 +36,7 @@ class ReservationController extends Controller
             'reservations' => $reservations,
             'can' => [
                 'excel' => $request->user()->can('export-excel'),
+                'create' => $request->user()->can('create-reservation'),
             ],
         ]);
     }

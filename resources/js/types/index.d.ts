@@ -42,12 +42,16 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
 
 export type IndexVehicleProps = PageProps & {
     vehicles: Vehicle[];
+    can: {
+        create: boolean;
+    }
 };
 
 export type IndexReservationProps = PageProps & {
     reservations: Reservation[];
     can: {
         excel: boolean;
+        create: boolean;
     }
 }
 

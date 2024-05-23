@@ -34,6 +34,9 @@ class VehicleController extends Controller
 
         return Inertia::render('Vehicle/IndexVehicle', [
             'vehicles' => $vehicles,
+            'can' => [
+                'create' => request()->user()->can('create-vehicle'),
+            ],
         ]);
     }
 }
