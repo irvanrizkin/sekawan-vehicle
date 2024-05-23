@@ -44,4 +44,19 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
+    }
+
+    public function approverReservations()
+    {
+        return $this->hasMany(Reservation::class, 'approver_id');
+    }
+
+    public function driverReservations()
+    {
+        return $this->hasMany(Reservation::class, 'driver_id');
+    }
 }
