@@ -6,6 +6,7 @@ use App\Models\Reservation;
 use App\Models\User;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class ReservationController extends Controller
@@ -16,6 +17,21 @@ class ReservationController extends Controller
 
         return Inertia::render('Reservation/CreateReservation', [
             'vehicles' => $vehicles,
+        ]);
+    }
+
+    public function index()
+    {
+        if (Gate::allows('approve-reservation')) {
+            $reservations = Reservation::with('approver')->where('approver_id', auth()->id())->get();
+        } else if (Gate::allows('assign-reservation')) {
+            $reservations = Reservation::with('approver')->get();
+        } else {
+            $reservations = Reservation::with('approver')->where('user_id', auth()->id())->get();
+        }
+
+        return Inertia::render('Reservation/IndexReservation', [
+            'reservations' => $reservations,
         ]);
     }
 
@@ -79,6 +95,6 @@ class ReservationController extends Controller
             'driver_id' => request('driver_id'),
         ]);
 
-        return redirect()->route('dashboard');
+        return redirect()->route('reservations.index');
     }
 }

@@ -23,6 +23,7 @@ export interface Reservation {
     end_date: string;
     approval_status: number;
     approver_id: number;
+    approver: User;
     driver_id: number;
     created_at: string;
     updated_at: string;
@@ -37,6 +38,10 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
 export type IndexVehicleProps = PageProps & {
     vehicles: Vehicle[];
 };
+
+export type IndexReservationProps = PageProps & {
+    reservations: Reservation[]
+}
 
 export type EditReservationProps = PageProps & {
     reservation: Reservation;
