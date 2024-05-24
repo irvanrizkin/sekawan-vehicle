@@ -40,5 +40,9 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('create-reservation', function (User $user) {
             return $user->role === 'employee';
         });
+
+        Gate::define('read-log', function (User $user) {
+            return $user->role === 'admin';
+        });
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LogController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\VehicleController;
@@ -35,6 +36,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/reservations/{id}/edit', [ReservationController::class, 'edit'])->name('reservations.edit');
     Route::patch('/reservations/{id}', [ReservationController::class, 'update'])->name('reservations.update');
     Route::get('/reservations/export', [ReservationController::class, 'exportExcel'])->name('reservations.export');
+
+    Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
 });
 
 require __DIR__.'/auth.php';

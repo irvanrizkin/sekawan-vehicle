@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\ReservationsExport;
+use App\Models\Log;
 use App\Models\Reservation;
 use App\Models\User;
 use App\Models\Vehicle;
@@ -50,7 +51,7 @@ class ReservationController extends Controller
             'end_date' => ['required', 'date'],
         ]);
 
-        Reservation::create([
+        $reservation = Reservation::create([
             'purpose' => request('purpose'),
             'vehicle_id' => request('vehicle_id'),
             'start_date' => request('start_date'),
@@ -59,6 +60,11 @@ class ReservationController extends Controller
             'approver_id' => null,
             'driver_id' => null,
             'user_id' => auth()->id(),
+        ]);
+
+        Log::create([
+            'scope' => 'reservation:create:employee',
+            'message' => auth()->user()->name . " created a reservation " . $reservation->id,
         ]);
 
         return redirect()->route('dashboard');
@@ -100,6 +106,18 @@ class ReservationController extends Controller
             'approver_id' => request('approver_id'),
             'driver_id' => request('driver_id'),
         ]);
+
+        if ($reservation->approval_status == 3) {
+            Log::create([
+                'scope' => 'reservation:update:' . auth()->user()->role,
+                'message' => auth()->user()->name . " reject the reservation with ID " . $reservation->id,
+            ]);
+        } else {
+            Log::create([
+                'scope' => 'reservation:update:' . auth()->user()->role,
+                'message' => auth()->user()->name . " approve the reservation with ID " . $reservation->id,
+            ]);
+        }
 
         return redirect()->route('reservations.index');
     }

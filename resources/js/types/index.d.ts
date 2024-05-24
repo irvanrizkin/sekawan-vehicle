@@ -34,6 +34,12 @@ export interface Reservation {
     updated_at: string;
 }
 
+export interface Log {
+    id: number;
+    scope: string;
+    message: string;
+}
+
 export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
     auth: {
         user: User;
@@ -67,4 +73,8 @@ export type EditReservationProps = PageProps & {
 
 export type DashboardProps = PageProps & {
     vehiclesCount: VehicleCount[];
+}
+
+export type IndexLogProps = PageProps & {
+    logs: Log[];
 }

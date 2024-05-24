@@ -31,6 +31,11 @@ export default function Authenticated({ user, header, children }: PropsWithChild
                                 <NavLink href={route('reservations.index')} active={route().current('reservations.index')}>
                                     Reservations
                                 </NavLink>
+                                {user.role === 'admin' && (
+                                    <NavLink href={route('logs.index')} active={route().current('logs.index')}>
+                                        Logs
+                                    </NavLink>
+                                )}
                             </div>
                         </div>
 
